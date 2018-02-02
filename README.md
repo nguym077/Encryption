@@ -1,2 +1,2 @@
 # ComputerSecurity
-Lab assignments for CECS378
+Ransomware
