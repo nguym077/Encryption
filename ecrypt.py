@@ -5,10 +5,14 @@
 
 import sys
 import os
+import base64
 from cryptography.hazmat.primitives.ciphers import algorithms, modes, Cipher
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import padding
 
+REQUIRED_KEY_BYTE_LENGTH = 32
+REQUIRED_IV_BYTE_LENGTH = 16
+BLOCK_SIZE = 256
 
 # (C, IV)= Myencrypt(message, key):
 # In this method, you will generate a 16 Bytes IV, and encrypt
@@ -16,17 +20,13 @@ from cryptography.hazmat.primitives import padding
 # You return an error if the len(key) < 32 (i.e., the key has
 # to be 32 bytes = 256 bits).
 
-REQUIRED_KEY_BYTE_LENGTH = 32
-REQUIRED_IV_BYTE_LENGTH = 16
-BLOCK_SIZE = 256
-
 
 def myencrypt(message, key):
     if len(key) != REQUIRED_KEY_BYTE_LENGTH:
         # prints error message
         sys.stderr.write('Error: Key length must be 32 bytes.')
     else:
-        print('... Encrypting message in CBC mode (AES)')
+        print('... Begin myencrypt with CBC mode (AES)')
 
         # generates random iv for specified length
         iv = os.urandom(REQUIRED_IV_BYTE_LENGTH)
@@ -49,7 +49,7 @@ def myencrypt(message, key):
         # encrypts padded message
         c = encrypter.update(c) + encrypter.finalize()
 
-        print('... Finished encryption')
+        print('... Finished myencrypt')
         return c, iv
 
 
@@ -60,5 +60,22 @@ def myencrypt(message, key):
 # cipher C, IV, key and the extension of the file (as a string).
 
 
-def myfileencrypt(filepath):
-    print("test 2")
+def myfileencrypt(filepath):    # 'filepath' should be 'files/name.extension'
+    if os.path.isfile(filepath):
+        print('... Begin myfileencrypt')
+        key = os.urandom(REQUIRED_KEY_BYTE_LENGTH)
+
+        # converts an image to a string
+        fh = open(filepath, "rb")       # opens binary file in read mode
+        imageBytes = base64.b64encode(fh.read())
+        fh.close()
+
+        c, iv = myencrypt(imageBytes, key)
+
+        print('... Finished myfileencrypt')
+        # return c, iv, key, ext
+    else:
+        sys.stderr.write('File does not exist.')
+
+
+myfileencrypt('files/TestImage.JPEG')
