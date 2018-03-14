@@ -40,6 +40,16 @@ def mydecrypt(c, iv, key):
         return message
 
 
-def myfiledecrypt(filepath):
-    print("test 2")
+def myfiledecrypt(filepath, c, iv, key):    # 'filepath' should be 'files/name.extension'
+    if os.path.isfile(filepath):
+        print('... Begin myfiledecrypt')
 
+        m = mydecrypt(c, iv, key)
+
+        fh = open("files/decryptedImage.jpg", "wb")
+        fh.write(base64.b64decode(m))
+        fh.close()
+
+        print('... Finish myfiledecrypt')
+    else:
+        sys.stderr.write('File does not exist.')
