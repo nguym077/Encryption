@@ -10,9 +10,6 @@ from cryptography.hazmat.primitives.ciphers import algorithms, modes, Cipher
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import padding
 
-
-
-
 REQUIRED_KEY_BYTE_LENGTH = 32
 REQUIRED_IV_BYTE_LENGTH = 16
 BLOCK_SIZE = 256
