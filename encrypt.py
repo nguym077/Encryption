@@ -63,6 +63,8 @@ def myfileencrypt(filepath):    # 'filepath' should be 'files/name.extension'
 
         # grabs extension to return
         filename, fileext = os.path.splitext(filepath)
+
+        # generates key
         key = os.urandom(KEY_BYTES)
 
         # converts an image to a string
@@ -72,9 +74,9 @@ def myfileencrypt(filepath):    # 'filepath' should be 'files/name.extension'
 
         c, iv = myencrypt(imageBytes, key)
 
-        # fh = open("files/output.JPEG", "wb")
-        # fh.write(base64.b64decode(c))
-        # fh.close()
+        fh = open("files/encryptedImage.jpg", "wb")
+        fh.write(base64.b64decode(c))
+        fh.close()
 
         print('... Finished myfileencrypt')
         return c, iv, key, fileext
