@@ -6,13 +6,10 @@
 import sys
 import os
 import base64
+from constants import KEY_BYTES, BLOCK_SIZE, IV_BYTES
 from cryptography.hazmat.primitives.ciphers import algorithms, modes, Cipher
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import padding
-
-REQUIRED_KEY_BYTE_LENGTH = 32
-REQUIRED_IV_BYTE_LENGTH = 16
-BLOCK_SIZE = 256
 
 # (C, IV)= Myencrypt(message, key):
 # In this method, you will generate a 16 Bytes IV, and encrypt
@@ -22,14 +19,14 @@ BLOCK_SIZE = 256
 
 
 def myencrypt(message, key):
-    if len(key) != REQUIRED_KEY_BYTE_LENGTH:
+    if len(key) != KEY_BYTES:
         # prints error message
         sys.stderr.write('Error: Key length must be 32 bytes.')
     else:
         print('... Begin myencrypt with CBC mode (AES)')
 
         # generates random iv for specified length
-        iv = os.urandom(REQUIRED_IV_BYTE_LENGTH)
+        iv = os.urandom(IV_BYTES)
 
         # cipher objects combine an algorithm with a mode
         cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
@@ -66,7 +63,7 @@ def myfileencrypt(filepath):    # 'filepath' should be 'files/name.extension'
 
         # grabs extension to return
         filename, fileext = os.path.splitext(filepath)
-        key = os.urandom(REQUIRED_KEY_BYTE_LENGTH)
+        key = os.urandom(KEY_BYTES)
 
         # converts an image to a string
         fh = open(filepath, "rb")       # opens binary file in read mode
@@ -83,6 +80,3 @@ def myfileencrypt(filepath):    # 'filepath' should be 'files/name.extension'
         return c, iv, key, fileext
     else:
         sys.stderr.write('File does not exist.')
-
-
-myfileencrypt('files/TestImage.JPEG')
