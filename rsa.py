@@ -16,6 +16,8 @@
 # does the exactly inverse of the above and generate the decrypted
 # file using your previous decryption methods.
 
+# openssl(rsa keygen)
+
 
 def myrsaencrypt(filepath, RSA_Publickey_filepath):
     print("test")

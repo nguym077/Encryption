@@ -14,6 +14,6 @@ ciphertext, iv = myencrypt('hello marian', key)
 message = mydecrypt(ciphertext, iv, key)
 print(message)
 
-print('\nBEGINNING FILE ENCRYPT PROCESS')
+print('\nBEGINNING FILE ENCRYPT/DECRYPT PROCESS')
 c, iv, key, fileext = myfileencrypt('files/TestImage.jpg')
 myfiledecrypt('files/encryptedImage.jpg', c, iv, key)
