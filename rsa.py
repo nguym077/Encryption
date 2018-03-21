@@ -19,6 +19,25 @@
 # openssl(rsa keygen)
 
 
-def myrsaencrypt(filepath, RSA_Publickey_filepath):
-    print("test")
+def MyRSAEncrypt(filepath, RSA_Publickey_filepath):
+    c, iv, key, ext = myfileencrypt("./" + filepath)
+
+
+fh = open(RSA_Publickey_filepath, "rb")
+publicKey = serialization.load_pem_public_key(
+    fh.read(),
+    backend=default_backend()
+)
+
+RSACipher = publicKey.encrypt(
+    key,
+    asymmetric.padding.OAEP(
+        x=asymmetric.padding.MGF1(algorithm=hashes.SHA256()),
+        algorithm=hashes.SHA256(),
+        label=None
+
+    )
+)
+
+return RSACipher, c, iv, ext
 
