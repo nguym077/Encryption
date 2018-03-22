@@ -53,6 +53,6 @@ def myfiledecrypt(filepath):    # 'filepath' should be 'files/name.extension'
         fh.write(base64.b64decode(m))
         fh.close()
 
-        print('... Finish myfiledecrypt')
+        print('... Finished myfiledecrypt')
     else:
         sys.stderr.write('File does not exist.')

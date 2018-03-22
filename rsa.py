@@ -73,6 +73,8 @@ def MyRSAEncrypt(filepath, RSA_Publickey_filepath):
         )
     )
 
+    print("... Finished myrsaencrypt")
+
     return RSACipher, c, iv, ext
 
 # (RSACipher, C, IV, ext)= MyRSAEncrypt(filepath, RSA_Publickey_filepath):
@@ -121,3 +123,4 @@ def MyRSADecrypt(RSACipher, c, iv, ext, RSA_privatekey_filepath):
 
     # decrypts json file to return original image
     myfiledecrypt("files/encryptedRSA.json")
+    print("... Finished myrsadecrypt")
