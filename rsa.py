@@ -18,26 +18,40 @@
 
 # openssl(rsa keygen)
 
+import sys
+import os
+import base64
+
+from encrypt import myfileencrypt
+from constants import KEY_BYTES, BLOCK_SIZE, IV_BYTES
+
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.ciphers import algorithms, modes, Cipher
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import padding
+from cryptography.hazmat.primitives.padding import PKCS7
+from cryptography.hazmat.primitives import asymmetric
+from cryptography.hazmat.primitives import serialization
+
 
 def MyRSAEncrypt(filepath, RSA_Publickey_filepath):
     c, iv, key, ext = myfileencrypt("./" + filepath)
 
-
-fh = open(RSA_Publickey_filepath, "rb")
-publicKey = serialization.load_pem_public_key(
-    fh.read(),
-    backend=default_backend()
-)
-
-RSACipher = publicKey.encrypt(
-    key,
-    asymmetric.padding.OAEP(
-        x=asymmetric.padding.MGF1(algorithm=hashes.SHA256()),
-        algorithm=hashes.SHA256(),
-        label=None
-
+    fh = open(RSA_Publickey_filepath, "rb")
+    publicKey = serialization.load_pem_public_key(
+        fh.read(),
+        backend=default_backend()
     )
-)
 
-return RSACipher, c, iv, ext
+    RSACipher = publicKey.encrypt(
+        key,
+        asymmetric.padding.OAEP(
+            x=asymmetric.padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+
+        )
+    )
+
+    return RSACipher, c, iv, ext
 
