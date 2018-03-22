@@ -6,6 +6,7 @@
 import sys
 import os
 import base64
+import json
 from constants import KEY_BYTES, BLOCK_SIZE, IV_BYTES
 from cryptography.hazmat.primitives.ciphers import algorithms, modes, Cipher
 from cryptography.hazmat.backends import default_backend
@@ -36,8 +37,16 @@ def mydecrypt(c, iv, key):
         return message
 
 
-def myfiledecrypt(filepath, c, iv, key):    # 'filepath' should be 'files/name.extension'
+def myfiledecrypt(filepath):    # 'filepath' should be 'files/name.extension'
     if os.path.isfile(filepath):
+        jr = open(filepath, "rb")
+        jsonData = json.load(jr)
+        jr.close()
+
+        c = base64.b64decode(jsonData["c"])
+        key = base64.b64decode(jsonData["key"])
+        iv = base64.b64decode(jsonData["iv"])
+
         m = mydecrypt(c, iv, key)
 
         fh = open("files/decryptedImage.jpg", "wb")

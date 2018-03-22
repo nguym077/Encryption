@@ -5,7 +5,9 @@
 
 from rsa import generateRSAKeys, MyRSADecrypt, MyRSAEncrypt
 from encrypt import myfileencrypt
+from decrypt import myfiledecrypt
 
 # generateRSAKeys()
 
 myfileencrypt("files/TestImage.jpg")
+myfiledecrypt("files/encrypted.json")
