@@ -6,6 +6,7 @@
 import sys
 import os
 import base64
+import json
 from constants import KEY_BYTES, BLOCK_SIZE, IV_BYTES
 from cryptography.hazmat.primitives.ciphers import algorithms, modes, Cipher
 from cryptography.hazmat.backends import default_backend
@@ -23,8 +24,6 @@ def myencrypt(message, key):
         # prints error message
         sys.stderr.write('Error: Key length must be 32 bytes.')
     else:
-        print('... Begin myencrypt with CBC mode (AES)')
-
         # generates random iv for specified length
         iv = os.urandom(IV_BYTES)
 
@@ -59,8 +58,6 @@ def myencrypt(message, key):
 
 def myfileencrypt(filepath):    # 'filepath' should be 'files/name.extension'
     if os.path.isfile(filepath):
-        print('... Begin myfileencrypt')
-
         # grabs extension to return
         filename, fileext = os.path.splitext(filepath)
 
@@ -74,8 +71,14 @@ def myfileencrypt(filepath):    # 'filepath' should be 'files/name.extension'
 
         c, iv = myencrypt(imageBytes, key)
 
-        fh = open("files/encryptedImage.jpg", "wb")
-        fh.write(base64.b64decode(c))
+        jsonFile = dict()
+        jsonFile['c'] = base64.b64encode(c).decode('utf-8')
+        jsonFile['iv'] = base64.b64encode(iv).decode('utf-8')
+        jsonFile['key'] = base64.b64encode(key).decode('utf-8')
+        jsonFile['fileext'] = base64.b64encode(fileext).decode('utf-8')
+
+        fh = open("files/encrypted.json", "wb")
+        json.dump(jsonFile, fh)
         fh.close()
 
         print('... Finished myfileencrypt')
