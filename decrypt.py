@@ -17,8 +17,6 @@ def mydecrypt(c, iv, key):
         # prints error message
         sys.stderr.write('Error: Key length must be 32 bytes.')
     else:
-        print('... Begin mydecrypt with CBC mode (AES)')
-
         # cipher objects combine an algorithm with a mode
         cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
 
@@ -40,8 +38,6 @@ def mydecrypt(c, iv, key):
 
 def myfiledecrypt(filepath, c, iv, key):    # 'filepath' should be 'files/name.extension'
     if os.path.isfile(filepath):
-        print('... Begin myfiledecrypt')
-
         m = mydecrypt(c, iv, key)
 
         fh = open("files/decryptedImage.jpg", "wb")
