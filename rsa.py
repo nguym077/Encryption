@@ -3,16 +3,14 @@
 # Lab 2 -- File Encryption
 # March 15, 2018
 
-import sys
-import os
 import base64
+import json
 
 from encrypt import myfileencrypt
 from decrypt import myfiledecrypt
 from constants import FERMAT_PRIME, KEY_SIZE
 
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.ciphers import algorithms, modes, Cipher
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import serialization
@@ -57,6 +55,7 @@ def generateRSAKeys():
 def MyRSAEncrypt(filepath, RSA_Publickey_filepath):
     c, iv, key, ext = myfileencrypt(filepath)
 
+    # loads public key
     fh = open(RSA_Publickey_filepath, "rb")
     public_key = serialization.load_pem_public_key(
         fh.read(),
@@ -64,6 +63,7 @@ def MyRSAEncrypt(filepath, RSA_Publickey_filepath):
     )
     fh.close()
 
+    # encrypts "key"
     RSACipher = public_key.encrypt(
         key,
         padding.OAEP(
@@ -89,6 +89,8 @@ def MyRSAEncrypt(filepath, RSA_Publickey_filepath):
 
 def MyRSADecrypt(RSACipher, c, iv, ext, RSA_privatekey_filepath):
     fh = open(RSA_privatekey_filepath, "rb")
+
+    # loads private key
     private_key = serialization.load_pem_private_key(
         fh.read(),
         password=None,
@@ -96,7 +98,8 @@ def MyRSADecrypt(RSACipher, c, iv, ext, RSA_privatekey_filepath):
     )
     fh.close()
 
-    RSAplaintext = private_key.decrypt(
+    # decrypts "RSACipher"
+    key = private_key.decrypt(
         RSACipher,
         padding.OAEP(
             mgf=padding.MGF1(algorithm=hashes.SHA256()),
@@ -105,4 +108,16 @@ def MyRSADecrypt(RSACipher, c, iv, ext, RSA_privatekey_filepath):
         )
     )
 
-    return RSAplaintext
+    # saves data into json file
+    jsonFile = dict()
+    jsonFile['c'] = base64.b64encode(c).decode('utf-8')
+    jsonFile['iv'] = base64.b64encode(iv).decode('utf-8')
+    jsonFile['key'] = base64.b64encode(key).decode('utf-8')
+    jsonFile['ext'] = base64.b64encode(ext).decode('utf-8')
+
+    fh = open("files/encryptedRSA.json", "wb")
+    json.dump(jsonFile, fh)
+    fh.close()
+
+    # decrypts json file to return original image
+    myfiledecrypt("files/encryptedRSA.json")
