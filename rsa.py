@@ -43,11 +43,11 @@ def generateRSAKeys():
     )
 
     # writes keys to file
-    fh = open("files/rsa_private_key.pem", "wb")
+    fh = open("rsa_private_key.pem", "wb")
     fh.write(private_pem)
     fh.close()
 
-    fh = open("files/rsa_public_key.pem", "wb")
+    fh = open("rsa_public_key.pem", "wb")
     fh.write(public_pem)
     fh.close()
 
