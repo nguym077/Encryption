@@ -14,6 +14,9 @@ from constants import KEY_BYTES
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.hmac import HMAC
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 
 
 def MyencryptMAC(message, EncKey, HMACKey):
@@ -67,4 +70,26 @@ def MyfileEncryptMAC(filepath):
 
 
 def MyRSAEncrypt(filepath, RSA_Publickey_filepath):
+    c, iv, tag, enckey, hmackey, ext = MyfileEncryptMAC(filepath)
+
+    # loads public key
+    fh = open(RSA_Publickey_filepath, "rb")
+    public_key = serialization.load_pem_public_key(
+        fh.read(),
+        backend=default_backend()
+    )
+    fh.close()
+
+    # encrypts "key" (enckey + hmackey)
+    RSACipher = public_key.encrypt(
+        enckey + hmackey,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+        )
+    )
+
+    print("... Finished myrsaencrypt (with hmac)")
+
     return RSACipher, c, iv, tag, ext
