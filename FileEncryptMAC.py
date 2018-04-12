@@ -8,7 +8,7 @@ import json
 import sys
 import base64
 
-from encrypt import myencrypt, myfileencrypt
+from encrypt import myencrypt
 from constants import KEY_BYTES
 
 from cryptography.hazmat.backends import default_backend
@@ -16,7 +16,6 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.hmac import HMAC
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import rsa
 
 
 def MyencryptMAC(message, EncKey, HMACKey):
@@ -91,5 +90,4 @@ def MyRSAEncrypt(filepath, RSA_Publickey_filepath):
     )
 
     print("... Finished myrsaencrypt (with hmac)")
-
     return RSACipher, c, iv, tag, ext
