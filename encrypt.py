@@ -22,7 +22,7 @@ from cryptography.hazmat.primitives import padding
 def myencrypt(message, key):
     if len(key) != KEY_BYTES:
         # prints error message
-        sys.stderr.write('Error: Key length must be 32 bytes.')
+        sys.stderr.write('Error: Encryption key length must be 32 bytes.')
     else:
         # generates random iv for specified length
         iv = os.urandom(IV_BYTES)
