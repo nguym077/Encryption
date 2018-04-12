@@ -1,3 +1,0 @@
-Hello, this project belongs to Marian Nguyen and Steven Chung.
-
-This file is used to encrypt with 'myfileencrypt()'.
