@@ -28,7 +28,7 @@ def MyencryptMAC(message, EncKey, HMACKey):
         # generates tag from HMAC
         tag = HMAC(HMACKey, hashes.SHA256(), backend=default_backend())
         tag.update(c)
-        tag.finalize()
+        tag = tag.finalize()
 
         return c, iv, tag
 

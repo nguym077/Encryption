@@ -84,19 +84,24 @@ def MyRSADecrypt(RSACipher, c, iv, tag, ext, RSA_privatekey_filepath):
         )
     )
 
+    # unseparate concatentation
+    enckey = key[:32]
+    hmackey = key[32:]
+
     # saves data into json file
     jsonFile = dict()
     jsonFile['c'] = base64.b64encode(c).decode('utf-8')
     jsonFile['iv'] = base64.b64encode(iv).decode('utf-8')
     jsonFile['tag'] = base64.b64encode(tag).decode('utf-8')
-    jsonFile['key'] = base64.b64encode(key).decode('utf-8')
+    jsonFile['enckey'] = base64.b64encode(enckey).decode('utf-8')
+    jsonFile['hmackey'] = base64.b64encode(hmackey).decode('utf-8')
     jsonFile['ext'] = base64.b64encode(ext).decode('utf-8')
 
     fh = open("files/encryptedRSA.json", "wb")
     json.dump(jsonFile, fh)
     fh.close()
 
-    # decrypts json file to return original image
+    # decrypts json file to return
     MyfileDecryptMAC("files/encryptedRSA.json")
     print('... Finished myrsadecrypt (mac)')
 
