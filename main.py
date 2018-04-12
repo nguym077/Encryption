@@ -5,7 +5,7 @@
 
 from rsa import generateRSAKeys, MyRSADecrypt, MyRSAEncrypt
 
-# generateRSAKeys()
+generateRSAKeys()
 
 RSACipher, c, iv, ext = MyRSAEncrypt("files/TestImage.jpg", "files/rsa_public_key.pem")
 MyRSADecrypt(RSACipher, c, iv, ext, "files/rsa_private_key.pem")
