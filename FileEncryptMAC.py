@@ -6,8 +6,9 @@
 import os
 import json
 import sys
+import base64
 
-from encrypt import myencrypt
+from encrypt import myencrypt, myfileencrypt
 from constants import KEY_BYTES
 
 from cryptography.hazmat.backends import default_backend
@@ -22,6 +23,7 @@ def MyencryptMAC(message, EncKey, HMACKey):
         # prints error message
         sys.stderr.write('Error: HMAC key length must be 32 bytes.')
     else:
+        # generates tag from HMAC
         tag = HMAC(HMACKey, hashes.SHA256(), backend=default_backend())
         tag.update(c)
         tag.finalize()
@@ -30,7 +32,38 @@ def MyencryptMAC(message, EncKey, HMACKey):
 
 
 def MyfileEncryptMAC(filepath):
-    return c, iv, enckey, hmackey, ext
+    if os.path.isfile(filepath):
+        # grabs extension to return
+        filename, ext = os.path.splitext(filepath)
+
+        # generates keys
+        enckey = os.urandom(KEY_BYTES)
+        hmackey = os.urandom(KEY_BYTES)
+
+        # converts an image to a string
+        fh = open(filepath, "rb")  # opens binary file in read mode
+        message = base64.b64encode(fh.read())
+        fh.close()
+
+        c, iv, tag = MyencryptMAC(message, enckey, hmackey)
+
+        # writes to json file
+        jsonFile = dict()
+        jsonFile['c'] = base64.b64encode(c).decode('utf-8')
+        jsonFile['iv'] = base64.b64encode(iv).decode('utf-8')
+        jsonFile['tag'] = base64.b64encode(tag).decode('utf-8')
+        jsonFile['enckey'] = base64.b64encode(enckey).decode('utf-8')
+        jsonFile['hmackey'] = base64.b64encode(hmackey).decode('utf-8')
+        jsonFile['ext'] = base64.b64encode(ext).decode('utf-8')
+
+        fh = open("files/encrypted.json", "wb")
+        json.dump(jsonFile, fh)
+        fh.close()
+
+        print('... Finished myfileencrypt (MAC)')
+        return c, iv, tag, enckey, hmackey, ext
+    else:
+        sys.stderr.write('File does not exist')
 
 
 def MyRSAEncrypt(filepath, RSA_Publickey_filepath):
