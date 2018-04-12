@@ -38,7 +38,7 @@ def MydecryptMAC(c, tag, iv, enckey, HMACKey):
         # decrypts message after tag verification
         message = mydecrypt(c, iv, enckey)
 
-        print('... Finished mydecrypt (mac')
+        print('... Finished mydecrypt (mac)')
         return message
 
 

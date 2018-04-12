@@ -62,7 +62,7 @@ def MyfileEncryptMAC(filepath):
         json.dump(jsonFile, fh)
         fh.close()
 
-        print('... Finished myfileencrypt (MAC)')
+        print('... Finished myfileencrypt (mac)')
         return c, iv, tag, enckey, hmackey, ext
     else:
         sys.stderr.write('File does not exist')
@@ -89,5 +89,5 @@ def MyRSAEncrypt(filepath, RSA_Publickey_filepath):
         )
     )
 
-    print("... Finished myrsaencrypt (with hmac)")
+    print("... Finished myrsaencrypt (mac)")
     return RSACipher, c, iv, tag, ext
