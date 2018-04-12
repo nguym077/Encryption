@@ -33,7 +33,6 @@ def mydecrypt(c, iv, key):
         # unpads decrypted message
         message = unpadder.update(message) + unpadder.finalize()
 
-        print('... Finished mydecrypt')
         return message
 
 
