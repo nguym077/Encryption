@@ -48,14 +48,17 @@ def MyfileDecryptMAC(filepath):
         jsonData = json.load(jr)
         jr.close()
 
+        # grabs values from json file
         c = base64.b64decode(jsonData["c"])
         iv = base64.b64decode(jsonData["iv"])
         tag = base64.b64decode(jsonData["tag"])
         enckey = base64.b64decode(jsonData["enckey"])
         hmackey = base64.b64decode(jsonData["hmackey"])
 
+        # decrypts
         m = MydecryptMAC(c, tag, iv, enckey, hmackey)
 
+        # writes to file
         fh = open("files/decryptedImage.jpg", "wb")
         fh.write(base64.b64decode(m))
         fh.close()
@@ -74,7 +77,7 @@ def MyRSADecrypt(RSACipher, c, iv, tag, ext, RSA_privatekey_filepath):
     )
     fh.close()
 
-    # decrypts "RSACipher"
+    # decrypts "RSACipher" (keys concatenated)
     key = private_key.decrypt(
         RSACipher,
         padding.OAEP(
@@ -84,7 +87,7 @@ def MyRSADecrypt(RSACipher, c, iv, tag, ext, RSA_privatekey_filepath):
         )
     )
 
-    # unseparate concatentation
+    # separates concatenation
     enckey = key[:32]
     hmackey = key[32:]
 
