@@ -19,13 +19,14 @@ from cryptography.hazmat.primitives import serialization
 
 
 def MyencryptMAC(message, EncKey, HMACKey):
+    # encrypts message with encryption key
     c, iv = myencrypt(message, EncKey)
 
     if len(HMACKey) != KEY_BYTES:
         # prints error message
         sys.stderr.write('Error: HMAC key length must be 32 bytes.')
     else:
-        # generates tag from HMAC
+        # generates tag using HMAC on ciphertext generated above
         tag = HMAC(HMACKey, hashes.SHA256(), backend=default_backend())
         tag.update(c)
         tag = tag.finalize()
